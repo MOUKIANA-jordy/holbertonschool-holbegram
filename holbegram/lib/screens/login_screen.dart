@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../services/auth_service.dart';
 import '../widgets/text_field.dart';
-import 'signup_screen.dart';
-import 'upload_image_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,9 +12,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  final AuthService authService = AuthService();
+  bool _passwordVisible = true;
 
-  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = true;
+  }
 
   @override
   void dispose() {
@@ -27,149 +27,214 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> login() async {
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      showMessage('Please fill in all fields.');
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      await authService.login(
-        email: email,
-        password: password,
-      );
-
-      if (!mounted) return;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const UploadImageScreen(),
-        ),
-      );
-    } catch (e) {
-      showMessage('Invalid email or password.');
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  void showMessage(String message) {
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 40,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 28,
             ),
-            child: Column(
-              children: [
-                const SizedBox(height: 80),
 
-                const Text(
-                  'Holbegram',
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
+            const Text(
+              'Holbegram',
+              style: TextStyle(
+                fontFamily: 'Billabong',
+                fontSize: 50,
+              ),
+            ),
+
+            Image.asset(
+              'assets/images/logo.png',
+              width: 80,
+              height: 60,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 28,
                   ),
-                ),
 
-                const SizedBox(height: 15),
-
-                const Text(
-                  'Login to your account',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+                  TextFieldInput(
+                    controller: emailController,
+                    ispassword: false,
+                    hintText: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    suffixIcon: null,
                   ),
-                ),
 
-                const SizedBox(height: 40),
-
-                CustomTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                ),
-
-                const SizedBox(height: 16),
-
-                CustomTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
-
-                const SizedBox(height: 24),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : login,
-                    child: isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                  const SizedBox(
+                    height: 24,
                   ),
-                ),
 
-                const SizedBox(height: 16),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                    ),
-                    TextButton(
+                  TextFieldInput(
+                    controller: passwordController,
+                    ispassword: !_passwordVisible,
+                    hintText: 'Password',
+                    keyboardType: TextInputType.visiblePassword,
+                    suffixIcon: IconButton(
+                      alignment: Alignment.bottomLeft,
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignupScreen(),
-                          ),
-                        );
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
                       },
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 28,
+                  ),
+
+                  SizedBox(
+                    height: 48,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          const Color.fromARGB(
+                            218,
+                            226,
+                            37,
+                            24,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {},
                       child: const Text(
-                        'Sign Up',
+                        'Log in',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+
+                  const SizedBox(
+                    height: 24,
+                  ),
+
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Forgot your login details? ',
+                      ),
+                      Text(
+                        'Get help logging in',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Flexible(
+                    flex: 0,
+                    child: Container(),
+                  ),
+
+                  const SizedBox(
+                    height: 24,
+                  ),
+
+                  const Divider(
+                    thickness: 2,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have an account",
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Sign up',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(
+                                218,
+                                226,
+                                37,
+                                24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  const Row(
+                    children: [
+                      Flexible(
+                        child: Divider(
+                          thickness: 2,
+                        ),
+                      ),
+                      Text(
+                        ' OR ',
+                      ),
+                      Flexible(
+                        child: Divider(
+                          thickness: 2,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-webinar-optimizing-for-success-google-business-webinar-13.png',
+                        width: 40,
+                        height: 40,
+                      ),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      const Text(
+                        'Sign in with Google',
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
