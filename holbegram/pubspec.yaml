@@ -64,4 +64,3 @@ flutter:
     - family: Billabong
       fonts:
         - asset: assets/fonts/Billabong.ttf
-        - asset: assets/fonts/InstagramSans.ttf

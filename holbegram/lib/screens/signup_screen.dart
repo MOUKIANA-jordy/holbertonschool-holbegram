@@ -1,158 +1,197 @@
 import 'package:flutter/material.dart';
-
-import '../services/auth_service.dart';
 import '../widgets/text_field.dart';
+import 'login_screen.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController usernameController = TextEditingController();
+class _SignUpState extends State<SignUp> {
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
 
-  final AuthService authService = AuthService();
+  bool _passwordVisible = true;
 
-  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = true;
+  }
 
   @override
   void dispose() {
-    usernameController.dispose();
     emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
+    passwordConfirmController.dispose();
     super.dispose();
-  }
-
-  Future<void> signUp() async {
-    final String username = usernameController.text.trim();
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
-
-    if (username.isEmpty || email.isEmpty || password.isEmpty) {
-      showMessage('Please fill in all fields.');
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-    });
-
-    try {
-      await authService.signUp(
-        username: username,
-        email: email,
-        password: password,
-      );
-
-      if (!mounted) return;
-
-      showMessage('Account created successfully.');
-
-      Navigator.pop(context);
-    } catch (e) {
-      showMessage('Unable to create account.');
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
-
-  void showMessage(String message) {
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 40,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(height: 28),
+
+            const Text(
+              'Holbegram',
+              style: TextStyle(
+                fontFamily: 'Billabong',
+                fontSize: 50,
+              ),
             ),
-            child: Column(
-              children: [
-                const SizedBox(height: 60),
 
-                const Text(
-                  'Create account',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+            Image.asset(
+              'assets/images/logo.png',
+              width: 80,
+              height: 60,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 28),
+
+                  TextFieldInput(
+                    controller: emailController,
+                    ispassword: false,
+                    hintText: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    suffixIcon: null,
                   ),
-                ),
 
-                const SizedBox(height: 40),
+                  const SizedBox(height: 18),
 
-                CustomTextField(
-                  controller: usernameController,
-                  hintText: 'Username',
-                ),
+                  TextFieldInput(
+                    controller: usernameController,
+                    ispassword: false,
+                    hintText: 'Username',
+                    keyboardType: TextInputType.text,
+                    suffixIcon: null,
+                  ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
-                CustomTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                ),
+                  TextFieldInput(
+                    controller: passwordController,
+                    ispassword: !_passwordVisible,
+                    hintText: 'Password',
+                    keyboardType: TextInputType.visiblePassword,
+                    suffixIcon: IconButton(
+                      alignment: Alignment.bottomLeft,
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
 
-                const SizedBox(height: 16),
+                  const SizedBox(height: 18),
 
-                CustomTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
+                  TextFieldInput(
+                    controller: passwordConfirmController,
+                    ispassword: !_passwordVisible,
+                    hintText: 'Confirm Password',
+                    keyboardType: TextInputType.visiblePassword,
+                    suffixIcon: IconButton(
+                      alignment: Alignment.bottomLeft,
+                      icon: Icon(
+                        _passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
 
-                const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : signUp,
-                    child: isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
+                  SizedBox(
+                    height: 48,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(
+                          const Color.fromARGB(218, 226, 37, 24),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        'Sign up',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  const Divider(
+                    thickness: 2,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Already have an account?',
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(
+                                218,
+                                226,
+                                37,
+                                24,
+                              ),
                             ),
-                          )
-                        : const Text(
-                            'Sign Up',
-                            style: TextStyle(fontSize: 16),
                           ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 15),
-
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    'Already have an account? Login',
-                  ),
-                ),
-              ],
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
