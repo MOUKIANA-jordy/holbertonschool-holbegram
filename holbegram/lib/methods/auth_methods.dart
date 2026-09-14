@@ -89,4 +89,15 @@ class AuthMethode {
 
     return res;
   }
+
+  Future<Users> getUserDetails() async {
+    final User currentUser = _auth.currentUser!;
+
+    final DocumentSnapshot snap = await _firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+
+    return Users.fromSnap(snap);
+  }
 }
