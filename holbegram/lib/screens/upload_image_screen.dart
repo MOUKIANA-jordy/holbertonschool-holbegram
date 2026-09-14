@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../methods/auth_methods.dart';
+
 class AddPicture extends StatefulWidget {
   final String email;
   final String password;
@@ -52,6 +54,33 @@ class _AddPictureState extends State<AddPicture> {
     }
   }
 
+  Future<void> signUp() async {
+    final String result = await AuthMethode().signUpUser(
+      email: widget.email,
+      username: widget.username,
+      password: widget.password,
+      file: _image,
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (result == 'success') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('success'),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +97,18 @@ class _AddPictureState extends State<AddPicture> {
                   'Add a profile picture',
                   style: TextStyle(
                     fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+
+                Text(
+                  widget.username,
+                  style: const TextStyle(
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -135,7 +176,7 @@ class _AddPictureState extends State<AddPicture> {
                   width: double.infinity,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: signUp,
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
                         const Color.fromARGB(

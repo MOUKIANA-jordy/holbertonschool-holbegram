@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/text_field.dart';
 import 'login_screen.dart';
+import 'upload_image_screen.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -33,6 +35,45 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+  void goToAddPicture() {
+    final String email = emailController.text.trim();
+    final String username = usernameController.text.trim();
+    final String password = passwordController.text.trim();
+    final String passwordConfirm = passwordConfirmController.text.trim();
+
+    if (email.isEmpty ||
+        username.isEmpty ||
+        password.isEmpty ||
+        passwordConfirm.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all the fields'),
+        ),
+      );
+      return;
+    }
+
+    if (password != passwordConfirm) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+        ),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddPicture(
+          email: email,
+          username: username,
+          password: password,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +82,9 @@ class _SignUpState extends State<SignUp> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 28),
+            const SizedBox(
+              height: 28,
+            ),
 
             const Text(
               'Holbegram',
@@ -58,10 +101,14 @@ class _SignUpState extends State<SignUp> {
             ),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+              ),
               child: Column(
                 children: [
-                  const SizedBox(height: 28),
+                  const SizedBox(
+                    height: 28,
+                  ),
 
                   TextFieldInput(
                     controller: emailController,
@@ -71,7 +118,9 @@ class _SignUpState extends State<SignUp> {
                     suffixIcon: null,
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(
+                    height: 18,
+                  ),
 
                   TextFieldInput(
                     controller: usernameController,
@@ -81,7 +130,9 @@ class _SignUpState extends State<SignUp> {
                     suffixIcon: null,
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(
+                    height: 18,
+                  ),
 
                   TextFieldInput(
                     controller: passwordController,
@@ -103,7 +154,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(
+                    height: 18,
+                  ),
 
                   TextFieldInput(
                     controller: passwordConfirmController,
@@ -125,7 +178,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  const SizedBox(height: 28),
+                  const SizedBox(
+                    height: 28,
+                  ),
 
                   SizedBox(
                     height: 48,
@@ -133,10 +188,15 @@ class _SignUpState extends State<SignUp> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all(
-                          const Color.fromARGB(218, 226, 37, 24),
+                          const Color.fromARGB(
+                            218,
+                            226,
+                            37,
+                            24,
+                          ),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: goToAddPicture,
                       child: const Text(
                         'Sign up',
                         style: TextStyle(
@@ -146,14 +206,18 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(
+                    height: 24,
+                  ),
 
                   const Divider(
                     thickness: 2,
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -187,7 +251,9 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 10,
+                  ),
                 ],
               ),
             ),
