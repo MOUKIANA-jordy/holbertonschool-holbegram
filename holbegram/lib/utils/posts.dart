@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
+import '../screens/pages/methods/post_storage.dart';
 
 class Posts extends StatefulWidget {
   const Posts({super.key});
@@ -55,6 +56,12 @@ class _PostsState extends State<Posts> {
               final postData =
                   data[index].data() as Map<String, dynamic>;
 
+              final String postId =
+                  postData['postId'] ?? data[index].id;
+
+              final String publicId =
+                  postData['publicId'] ?? '';
+
               final String username =
                   postData['username'] ??
                   currentUser?.username ??
@@ -99,30 +106,62 @@ class _PostsState extends State<Posts> {
                                   : null,
                             ),
                             child: profileImage.isEmpty
-                                ? const Icon(Icons.person)
+                                ? const Icon(
+                                    Icons.person,
+                                  )
                                 : null,
                           ),
-                          const SizedBox(width: 10),
+
+                          const SizedBox(
+                            width: 10,
+                          ),
+
                           Text(
                             username,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+
                           const Spacer(),
+
                           IconButton(
                             icon: const Icon(
                               Icons.more_horiz,
                             ),
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Post Deleted',
+                            onPressed: () async {
+                              try {
+                                await PostStorage().deletePost(
+                                  postId,
+                                  publicId,
+                                );
+
+                                if (!context.mounted) {
+                                  return;
+                                }
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Post Deleted',
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } catch (error) {
+                                if (!context.mounted) {
+                                  return;
+                                }
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      error.toString(),
+                                    ),
+                                  ),
+                                );
+                              }
                             },
                           ),
                         ],
@@ -138,7 +177,9 @@ class _PostsState extends State<Posts> {
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
                     Center(
                       child: Container(
@@ -179,19 +220,23 @@ class _PostsState extends State<Posts> {
                               Icons.favorite_border,
                             ),
                           ),
+
                           IconButton(
                             onPressed: () {},
                             icon: const Icon(
                               Icons.comment_outlined,
                             ),
                           ),
+
                           IconButton(
                             onPressed: () {},
                             icon: const Icon(
                               Icons.send_outlined,
                             ),
                           ),
+
                           const Spacer(),
+
                           IconButton(
                             onPressed: () {},
                             icon: const Icon(
