@@ -2,7 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/pages/add_image.dart';
-import '../screens/pages/favorate.dart';
+import '../screens/pages/favorite.dart';
 import '../screens/pages/feed.dart';
 import '../screens/pages/profile_screen.dart';
 import '../screens/pages/search.dart';
@@ -62,13 +62,17 @@ class _BottomNavState extends State<BottomNav> {
 
           _pageController.animateToPage(
             index,
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(
+              milliseconds: 300,
+            ),
             curve: Curves.ease,
           );
         },
         items: [
           BottomNavyBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(
+              Icons.home,
+            ),
             title: const Text(
               'Home',
               textAlign: TextAlign.center,
@@ -81,7 +85,9 @@ class _BottomNavState extends State<BottomNav> {
             inactiveColor: Colors.black,
           ),
           BottomNavyBarItem(
-            icon: const Icon(Icons.search),
+            icon: const Icon(
+              Icons.search,
+            ),
             title: const Text(
               'Search',
               textAlign: TextAlign.center,
@@ -94,7 +100,9 @@ class _BottomNavState extends State<BottomNav> {
             inactiveColor: Colors.black,
           ),
           BottomNavyBarItem(
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(
+              Icons.add_circle_outline,
+            ),
             title: const Text(
               'Add',
               textAlign: TextAlign.center,
@@ -107,7 +115,9 @@ class _BottomNavState extends State<BottomNav> {
             inactiveColor: Colors.black,
           ),
           BottomNavyBarItem(
-            icon: const Icon(Icons.favorite_border),
+            icon: const Icon(
+              Icons.favorite_border,
+            ),
             title: const Text(
               'Favorite',
               textAlign: TextAlign.center,
@@ -120,7 +130,9 @@ class _BottomNavState extends State<BottomNav> {
             inactiveColor: Colors.black,
           ),
           BottomNavyBarItem(
-            icon: const Icon(Icons.person_outline),
+            icon: const Icon(
+              Icons.person_outline,
+            ),
             title: const Text(
               'Profile',
               textAlign: TextAlign.center,
