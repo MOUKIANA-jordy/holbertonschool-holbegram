@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../methods/auth_methods.dart';
 import '../widgets/text_field.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,6 +28,34 @@ class _LoginScreenState extends State<LoginScreen> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> loginUser() async {
+    final String result = await AuthMethode().login(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+
+    if (!mounted) {
+      return;
+    }
+
+    if (result == 'success') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login'),
+        ),
+      );
+
+      // La navigation vers la Home Page sera ajoutée
+      // lorsque la page Home sera créée.
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(result),
+        ),
+      );
+    }
   }
 
   @override
@@ -113,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: loginUser,
                       child: const Text(
                         'Log in',
                         style: TextStyle(
@@ -165,8 +196,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         const Text(
                           "Don't have an account",
                         ),
+
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignUp(),
+                              ),
+                            );
+                          },
                           child: const Text(
                             'Sign up',
                             style: TextStyle(
@@ -219,9 +258,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 40,
                         height: 40,
                       ),
+
                       const SizedBox(
                         width: 8,
                       ),
+
                       const Text(
                         'Sign in with Google',
                       ),
